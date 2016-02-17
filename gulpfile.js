@@ -11,24 +11,24 @@ var sh = require('shelljs');
 
 var paths = {
   sass: ['./scss/**/*.scss'],
-  sass_src: ['./www/sass'],
-  sass_dest: ['./www/css']
+  sass_src: ['./www/sass/*.scss'],
+  sass_dest: ['www/css']
 };
 
 gulp.task('default', ['sass']);
 
 gulp.task('sass', function(done) {
-  browserSync({
-    files: ['www/*', 'www/**/*'],
-    server: {baseDir:['www'],
-    index: 'index.html'
-  }
-  });
+  // browserSync({
+  //   files: ['www/*', 'www/**/*'],
+  //   server: {baseDir:['www'],
+  //   index: 'index.html'
+  // }
+  // });
 
-  gulp.src(['./scss/ionic.app.scss', './www/sass/*.scss'])
+  gulp.src(['./scss/ionic.app.scss', './www/sass/'])
     .pipe(sass())
     .on('error', sass.logError)
-    .pipe(gulp.dest('./www/css'))
+    .pipe(gulp.dest('./www/css/'))
     .pipe(minifyCss({
       keepSpecialComments: 0
     }))
@@ -43,17 +43,21 @@ gulp.task('watch', function() {
 gulp.task('sass-styles', function(){
   gulp.src(paths.sass_src)
   .pipe(sass().on('error', sass.logError))
-  .pipe(gulp.dest(paths.sass_dest))
+  .pipe(gulp.dest('./www/css/'))
   .pipe(reload({stream:true}));
 });
 gulp.task('sasswatch', function(){
-  browserSync({
-    files: ['www/*'],
-    server: {baseDir:['www'],
-    index: 'index.html'
-  }
-  });
-  gulp.watch(paths.sass_src, ['sass-styles'])
+
+  gulp.watch(paths.sass_src, ['sass-styles']);
+
+  // browserSync({
+  //   files: ['www/*'],
+  //   server: {
+  //     baseDir:['www'],
+  //     index: 'index.html'
+  //   }
+  // });
+
 });
 
 gulp.task('install', ['git-check'], function() {

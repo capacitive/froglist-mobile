@@ -1,6 +1,9 @@
 body {
   font: 100% Helvetica, sans-serif; }
 
+.hide {
+  display: false; }
+
 .item-expand {
   position: relative;
   width: 100%;
@@ -16,7 +19,6 @@ body {
   height: 15px;
   width: 100%;
   display: block;
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(255, 255, 255, 0)), color-stop(1, white));
   background-image: -o-linear-gradient(bottom, rgba(255, 255, 255, 0) 0%, white 100%);
   background-image: -moz-linear-gradient(bottom, rgba(255, 255, 255, 0) 0%, white 100%);
   background-image: -webkit-linear-gradient(left, rgba(255, 255, 255, 0) 0%, white 100%);

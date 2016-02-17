@@ -78,12 +78,29 @@ angular.module('froglist', ['ionic']).controller('froglistController', function 
 })
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
+    Ionic.io();
+    var user = Ionic.User.current();
+
+    if(!user.id){
+      user.id = Ionic.User.anonymousId();
+    }
+    user.save();
+    alert('user: ' + user.id);
+
     var push = new Ionic.Push({
-      "debug":true
+      "debug": false,
+      "onNotification": function(notification){
+        var payload = notification.payload;
+        alert('Note: ' + notification + ' | Payload: ' + payload);
+      },
+      "onRegister": function(data){
+        alert("Successfully registered Device token: " + token.token);
+      }
     });
-    push.register(function(){
-      console.log("Device token: ", token.token);
+    push.register(function(token){
+      alert("Registering Device token: " + token.token);
     });
+
 
     if(window.cordova && window.cordova.plugins.Keyboard) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -99,4 +116,4 @@ angular.module('froglist', ['ionic']).controller('froglistController', function 
       StatusBar.styleDefault();
     }
   });
-})
+});
