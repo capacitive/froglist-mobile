@@ -3,7 +3,8 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('froglist', ['ionic']).controller('froglistController', function ($scope, $ionicModal, $filter) {
+angular.module('froglist', ['ionic'])
+.controller('froglistController', function ($scope, $ionicModal, $filter) {
   $scope.visibleItem = true;
   $scope.todoItems = [];
 
@@ -91,16 +92,20 @@ angular.module('froglist', ['ionic']).controller('froglistController', function 
       "debug": false,
       "onNotification": function(notification){
         var payload = notification.payload;
-        alert('Note: ' + notification + ' | Payload: ' + payload);
+        alert('Message: ' + notification + ' | Payload: ' + payload);
       },
       "onRegister": function(data){
-        alert("Successfully registered Device token: " + token.token);
+        alert('Ionic Push: registered device token: ' + data.token);
       }
     });
-    push.register(function(token){
-      alert("Registering Device token: " + token.token);
-    });
 
+    var callback =  function(pushToken){
+      alert("Registered device token: " + pushToken.token);
+      user.addPushToken(pushToken);
+      user.save();
+    };
+
+    push.register(callback);
 
     if(window.cordova && window.cordova.plugins.Keyboard) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
