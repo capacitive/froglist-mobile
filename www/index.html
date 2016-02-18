@@ -35,16 +35,16 @@
       </ion-header-bar>
       <ion-content>
       <ion-list>
-        <ion-item ng-repeat="item in todoItems | orderBy: &apos;title&apos;" class="item item-text-wrap">
-          <div ng-class="isItemShown(item) ? &apos;item-expand active&apos; : &apos;item-expand inactive&apos; ">
+        <ion-item ng-repeat="item in todoItems | orderBy: 'title'" class="item item-text-wrap">
+          <div ng-class="isItemShown(item) ? 'item-expand active' : 'item-expand inactive' ">
             <h2>{{item.title}}</h2>
             <p>{{item.detail}}</p>
           </div>
           <div ng-click="toggleItem(item)" class="item-expand-footer">
-            <i ng-class="isItemShown(item) ? &apos;ion-ios-minus-outline&apos; : &apos;ion-ios-plus-outline&apos; "></i>
-              {{isItemShown(item) ? &apos;Less&apos; : &apos;More&apos;}}
+            <i ng-class="isItemShown(item) ? 'ion-ios-minus-outline' : 'ion-ios-plus-outline' "></i>
+              {{isItemShown(item) ? 'Less' : 'More'}}
             <div ng-click="deleteItem(item)" class="item-interactions">
-              <i ng-class="isItemShown(item) ? &apos;icon ion-ios-trash size-24&apos; : &apos;&apos; "></i>
+              <i ng-class="isItemShown(item) ? 'icon ion-ios-trash size-24' : '' "></i>
             </div>
           </div>
 
@@ -59,7 +59,7 @@
       <ion-content>
         <ion-list>
           <ion-item ng-repeat="note in notifications" class="item item-text-wrap">
-            <div ng-click="deleteNotification(notification)">
+            <div ng-click="deleteNotification(note)">
               <h2>{{note.title}}</h2>
               <p>{{note.text}}</p>
               <h3>payload:</h3>

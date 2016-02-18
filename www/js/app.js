@@ -10,6 +10,9 @@ angular.module('froglist', ['ionic', 'ionic.service.core', 'ionic.service.push']
   $scope.todoItems = [];
   $scope.notifications = [];
 
+  $scope.notifications.push({title: "test1", text: "test1 message", _payload: "{var1: true}"});
+  $scope.notifications.push({title: "test2", text: "test2 message", _payload: "{var1: true}"});
+
   if(localStorage){
     console.log('getting items from localStorage...');
     var storageItems = localStorage.getItem('todoItems');
@@ -127,11 +130,11 @@ angular.module('froglist', ['ionic', 'ionic.service.core', 'ionic.service.push']
   };
 
   $scope.deleteNotification = function(notification){
-    alert('deleting notification: ' + notification.title);
+    //alert('deleting notification: ' + notification.title);
     var notificationArray = $scope.notifications;
     var indexes = $.map(notificationArray, function(obj, index) {
         if(obj.title == notification.title) {
-          alert('found match: ' + obj.title);
+          //alert('found match: ' + obj.title);
           return index;
         }
     });
