@@ -54,10 +54,19 @@
     </ion-side-menu-content>
     <ion-side-menu side="left">
       <ion-header-bar class="bar-positive">
-        <h1 class="title">Projects</h1>
+        <h1 class="title">Notifications</h1>
       </ion-header-bar>
       <ion-content>
-
+        <ion-list>
+          <ion-item ng-repeat="note in notifications" class="item item-text-wrap">
+            <div ng-click="deleteNotification(notification)">
+              <h2>{{note.title}}</h2>
+              <p>{{note.text}}</p>
+              <h3>payload:</h3>
+              <p>{{note._payload}}</p>
+            </div>
+          </ion-item>
+        </ion-list>
       </ion-content>
     </ion-side-menu>
   </ion-side-menus>

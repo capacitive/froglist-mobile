@@ -3,16 +3,22 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('froglist', ['ionic'])
-.controller('froglistController', function ($scope, $ionicModal, $filter) {
+angular.module('froglist', ['ionic', 'ionic.service.core', 'ionic.service.push'])
+.controller('froglistController',
+  function ($scope, $ionicModal, $ionicPush, $filter) {
   $scope.visibleItem = true;
   $scope.todoItems = [];
+  $scope.notifications = [];
 
   if(localStorage){
     console.log('getting items from localStorage...');
     var storageItems = localStorage.getItem('todoItems');
     if(storageItems !== null){
       $scope.todoItems = JSON.parse(storageItems);
+    }
+    var notificationItems = localStorage.getItem('notifications');
+    if(notificationItems !== null){
+      $scope.notifications = JSON.parse(notificationItems);
     }
   }
 
@@ -23,6 +29,50 @@ angular.module('froglist', ['ionic'])
     scope: $scope,
     animation: 'slide-in-left'
   });
+
+  $scope.pushRegisterCallback = function(pushToken){
+    alert("Registered device token: " + pushToken.token);
+    user.addPushToken(pushToken);
+    user.save();
+  };
+
+  $scope.registerUser_Notifications = function(){
+    Ionic.io();
+    var user = Ionic.User.current();
+
+    if(!user.id){
+      user.id = Ionic.User.anonymousId();
+    }
+    user.save();
+    //alert('user: ' + user.id);
+
+    $ionicPush.init({
+      "debug": false,
+      "onRegister": function(data){
+        //alert('Ionic Push: registered device token: ' + data.token);
+      },
+      "onNotification": function(notification){
+        var payload = notification.payload;
+        alert('Message pushed! Payload: ' + payload);
+        $scope.notifications.push(notification);
+        //store local:
+        localStorage.removeItem('notifications');
+        localStorage.setItem('notifications', angular.toJson($scope.notifications));
+      }
+    });
+
+    $ionicPush.register(function(pushToken){
+      //alert("Registered device token: " + pushToken.token);
+      user.addPushToken(pushToken);
+      user.save();
+    });
+  };
+
+  ionic.Platform.ready(function(){
+    //alert('angular: ionic.Platform.ready');
+    $scope.registerUser_Notifications();
+  });
+
 
   $scope.createItem = function(item){
     var newId = 0;
@@ -76,37 +126,26 @@ angular.module('froglist', ['ionic'])
     return $scope.visibleItem === item;
   };
 
+  $scope.deleteNotification = function(notification){
+    alert('deleting notification: ' + notification.title);
+    var notificationArray = $scope.notifications;
+    var indexes = $.map(notificationArray, function(obj, index) {
+        if(obj.title == notification.title) {
+          alert('found match: ' + obj.title);
+          return index;
+        }
+    });
+    var idxN = indexes[0];
+    notificationArray.remove(idxN, idxN);
+
+    localStorage.removeItem('notifications');
+    localStorage.setItem('notifications', angular.toJson($scope.notifications));
+  }
+
 })
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
-    Ionic.io();
-    var user = Ionic.User.current();
-
-    if(!user.id){
-      user.id = Ionic.User.anonymousId();
-    }
-    user.save();
-    alert('user: ' + user.id);
-
-    var push = new Ionic.Push({
-      "debug": false,
-      "onNotification": function(notification){
-        var payload = notification.payload;
-        alert('Message: ' + notification + ' | Payload: ' + payload);
-      },
-      "onRegister": function(data){
-        alert('Ionic Push: registered device token: ' + data.token);
-      }
-    });
-
-    var callback =  function(pushToken){
-      alert("Registered device token: " + pushToken.token);
-      user.addPushToken(pushToken);
-      user.save();
-    };
-
-    push.register(callback);
-
+    //alert('$ionicPlatform.ready');
     if(window.cordova && window.cordova.plugins.Keyboard) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
